@@ -1,40 +1,39 @@
-# amix21
+# CLAUDE.md
 
-PR ワークフロー練習用の小さな Python パッケージ。
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## このリポジトリについて
+
+`amix21` は PR ワークフロー練習用の最小 Python パッケージ。公開 API は `greeting(name)` 関数ひとつ。
+ビルドや Lint の仕組みは無く、テストは pytest のみ。
 
 ## コマンド
 
 | 目的 | コマンド |
 |------|----------|
-| テスト実行 | `pytest` |
+| 全テスト | `pytest` |
+| 単一テスト | `pytest tests/test_greeting.py::test_greeting_rejects_empty_name` |
 | 開発インストール | `pip install -e .` |
-| 単体動作確認 | `python -c "from amix21 import greeting; print(greeting('World'))"` |
+| 動作確認 | `python -c "from amix21 import greeting; print(greeting('World'))"` |
 
-- Python 3.8 以上。依存パッケージは無し(テストに `pytest` のみ)。
-- `pytest` は `pyproject.toml` の `[tool.pytest.ini_options] pythonpath = ["."]` によりリポジトリ直下を import パスに追加して動く。
+- Lint・型チェック・ビルドスクリプトは未設定（探さなくてよい）。
+- `pyproject.toml` の `[tool.pytest.ini_options] pythonpath = ["."]` によりリポジトリ直下が
+  import パスに入るため、テスト実行に `pip install -e .` は不要。
 
-## 構成
+## 構成と設計
 
-```
-amix21/          パッケージ本体
-  __init__.py    公開 API を re-export（__all__ に列挙）
-  greeting.py    greeting(name) の実装
-tests/           pytest テスト（__init__.py は置かない）
-pyproject.toml   ビルド設定 + pytest 設定
-```
+- フラットレイアウト：パッケージは `amix21/` 直下（`src/` レイアウトは使わない）。
+- `amix21/__init__.py` が公開 API の窓口。関数を追加したら **`import` 文と `__all__` の両方**に
+  載せる — テストや利用側は常に `from amix21 import ...` で参照する。
+- 実装本体は用途ごとのモジュールに分ける（現状 `greeting.py` のみ）。
+- 入力の前処理・バリデーションは関数内で行い、不正値は `ValueError` を送出する。
+  docstring は Google スタイル（Args / Returns / Raises）。
 
-- `src` レイアウトではなくフラットレイアウト（`amix21/` が直下）。
-- 公開する関数は必ず `amix21/__init__.py` の `import` と `__all__` の両方に追加する。
+## 変更の進め方
 
-## 規約
-
-- 変更は小さく保ち、機能追加・修正は feature ブランチ → PR 経由で `main` に入れる。
-- ブランチ名は `種別/内容` 形式（例: `test/cover-empty-name-validation`, `feat/add-farewell`）。
-- 関数には Google スタイルの docstring（Args / Returns / Raises）を付ける。
-- 入力バリデーションを追加したら、正常系とエラー系の両方のテストを書く。
-- コミットメッセージは要点を1行目に、詳細は本文に。
-
-## やらないこと
-
-- 秘密情報（トークン・鍵）をこのファイルやリポジトリに置かない。
-- `main` へ直接 push しない（初期セットアップを除く）。
+- このリポジトリは PR 練習が目的。変更は feature ブランチ → PR 経由で `main` に入れる
+  （初期セットアップを除き `main` へ直接 push しない）。
+- ブランチ名は `種別/内容` 形式（例 `test/cover-empty-name-validation`,
+  `feat/add-farewell`, `docs/add-claude-md`）。
+- 入力バリデーションを追加・変更したら、正常系とエラー系の両方のテストを
+  `tests/test_<module>.py` に追加する。
