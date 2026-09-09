@@ -20,20 +20,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `pyproject.toml` の `[tool.pytest.ini_options] pythonpath = ["."]` によりリポジトリ直下が
   import パスに入るため、テスト実行に `pip install -e .` は不要。
 
-## 構成と設計
+## スキル
 
-- フラットレイアウト：パッケージは `amix21/` 直下（`src/` レイアウトは使わない）。
-- `amix21/__init__.py` が公開 API の窓口。関数を追加したら **`import` 文と `__all__` の両方**に
-  載せる — テストや利用側は常に `from amix21 import ...` で参照する。
-- 実装本体は用途ごとのモジュールに分ける（現状 `greeting.py` のみ）。
-- 入力の前処理・バリデーションは関数内で行い、不正値は `ValueError` を送出する。
-  docstring は Google スタイル（Args / Returns / Raises）。
+作業の種類ごとの手順は `.claude/skills/` に切り出してある。着手前に該当する SKILL.md を読む。
 
-## 変更の進め方
+- コードを追加・変更する（構成・設計・テストのルール）→ `.claude/skills/add-code/SKILL.md`
+- 変更をコミット・PR にする（ブランチ運用の手順）→ `.claude/skills/make-pr/SKILL.md`
 
-- このリポジトリは PR 練習が目的。変更は feature ブランチ → PR 経由で `main` に入れる
-  （初期セットアップを除き `main` へ直接 push しない）。
-- ブランチ名は `種別/内容` 形式（例 `test/cover-empty-name-validation`,
-  `feat/add-farewell`, `docs/add-claude-md`）。
-- 入力バリデーションを追加・変更したら、正常系とエラー系の両方のテストを
-  `tests/test_<module>.py` に追加する。
+## 調べ物・資料の読み込み
+
+- 長い資料・複数の資料・動画・本の読み込みは、NotebookLM 経由で処理し、結果は出典付きで受け取る。
+- NotebookLM CLI は `nlm`（`notebooklm-mcp-cli`、プロファイル `default`）。
+- 調べ物や分析をしたら、頼まれなくても毎回、結果を「リサーチ」フォルダに `日付_テーマ名.md` で保存する。
+- 「リサーチ」フォルダは `D:\AI-Works\リサーチ`。
