@@ -26,3 +26,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - コードを追加・変更する（構成・設計・テストのルール）→ `.claude/skills/add-code/SKILL.md`
 - 変更をコミット・PR にする（ブランチ運用の手順）→ `.claude/skills/make-pr/SKILL.md`
+
+## 調べ物・資料の読み込み
+
+- 長い資料・複数の資料・動画・本の読み込みは、NotebookLM 経由で処理し、結果は出典付きで受け取る。
+- NotebookLM CLI は `nlm`（`notebooklm-mcp-cli`、プロファイル `default`）。
+- 調べ物や分析をしたら、頼まれなくても毎回、結果を「リサーチ」フォルダに `日付_テーマ名.md` で保存する。
+- 「リサーチ」フォルダは `D:\AI-Works\リサーチ`。
